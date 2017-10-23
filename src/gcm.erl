@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start/2, start/3, stop/1, start_link/2, start_link/3]).
+-export([start/1, start/2, start/3, stop/1, start_link/2, start_link/3]).
 -export([push/3, sync_push/3, update_error_fun/2]).
 
 %% gen_server callbacks
@@ -27,11 +27,14 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
-start(Name, Key) ->
-    start(Name, Key, fun handle_error/2).
-
 start(Name, Key, ErrorFun) ->
     gcm_sup:start_child(Name, Key, ErrorFun).
+
+start(Key) ->
+    gcm_sup:start_child(Key, fun handle_error/2).
+
+start(Key, ErrorFun) ->
+    gcm_sup:start_child(Key, ErrorFun).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -40,8 +43,8 @@ start(Name, Key, ErrorFun) ->
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
 %%--------------------------------------------------------------------
-start_link(Name, Key) ->
-    start_link(Name, Key, fun handle_error/2).
+start_link(Key, ErrorFun) ->
+    gen_server:start_link(?MODULE, [Key, ErrorFun], []).
 
 start_link(Name, Key, ErrorFun) ->
     gen_server:start_link({local, Name}, ?MODULE, [Key, ErrorFun], []).

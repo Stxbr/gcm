@@ -11,7 +11,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0, start_child/3]).
+-export([start_link/0, start_child/3, start_child/2]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -32,6 +32,9 @@ start_link() ->
 
 start_child(Name, ApiKey, ErrorFun) ->
     supervisor:start_child(?MODULE, [Name, ApiKey, ErrorFun]).
+
+start_child(ApiKey, ErrorFun) ->
+    supervisor:start_child(?MODULE, [ApiKey, ErrorFun]).
 
 init([]) ->
     {ok, { {simple_one_for_one, 5, 10}, [?CHILD(gcm, worker)]} }.
