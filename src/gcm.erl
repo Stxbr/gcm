@@ -20,7 +20,7 @@
 
 -define(SERVER, ?MODULE).
 
--define(BASEURL, "https://android.googleapis.com/gcm/send").
+-define(BASEURL, "https://fcm.googleapis.com/fcm/send").
 
 -record(state, {key, retry_after, error_fun}).
 
